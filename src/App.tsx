@@ -1,59 +1,32 @@
 import {useEffect, useState} from 'react'
+import {fetchItems, createItem, handleItemCompleted, type Item} from './api'
 import './App.css'
 
-interface Item {
-  id: number
-  title: string
-  completed: boolean
-  created_at: string
-  updated_at: string
-}
-
-interface ItemForm {
-  title: string
-}
 
 function App() {
   const [items, setItems] = useState<Item[]>([])
   const [loading, setloading] = useState(true)
 
   useEffect(() => {
-    fetch("http://localhost:8000/items/")
-      .then(res => res.json())
+    fetchItems()
       .then(data => {
         setItems(data)
         setloading(false)
       })
   }, [])
 
-  function addItem() {
-    const itemText = document.getElementById('#item_text') as HTMLInputElement
-    const newItem: ItemForm = {
-      title: itemText.value,
-    }
-    fetch("http://localhost:8000/items/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newItem),
+  function addItem(e: React.SubmitEvent) {
+    e.preventDefault()
+    const itemText = document.getElementById('item_text') as HTMLInputElement
+    createItem(itemText.value).then((newItem) => {
+      setItems([...items, newItem])
+      itemText.value = ""
     })
-      .then(res => res.json())
-      .then(data => {
-        setItems([...items, data])
-        itemText.value = ""
-      })
   }
 
+
   function toggleItemCompleted(item: Item) {
-    fetch(`http://localhost:8000/items/${item.id}/`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({completed: !item.completed}),
-    })
-      .then(res => res.json())
+    handleItemCompleted(item)
       .then(updated => {
         setItems(items.map(i => (i.id === updated.id ? updated : i)))
       })
@@ -64,9 +37,9 @@ function App() {
   return (
     <div>
       <h1>Dobox</h1>
-      <form>
-        <input id="#item_text" type="text" placeholder="Add a new item" />
-        <button type="submit" onClick={addItem}>Add</button>
+      <form onSubmit={addItem}>
+        <input id="item_text" type="text" placeholder="Add a new item" />
+        <button type="submit">Add</button>
       </form>
       {{
         loading: <p>Loading...</p>,
