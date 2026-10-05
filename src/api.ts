@@ -8,22 +8,56 @@ export interface Item {
   updated_at: string
 }
 
-export function fetchItems(): Promise<Item[]> {
-  return fetch(`${API_URL}/items/`).then((res) => res.json())
+export interface User {
+  id: string,
+  email: string
+  name: string | null
+  is_active: boolean
+  is_superuser: boolean
+  is_verified: boolean
 }
 
-export function createItem(title: string): Promise<Item> {
-  return fetch(`${API_URL}/items/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, completed: false }),
-  }).then((res) => res.json())
+export interface GoogleAuth {
+  authorization_url: string
 }
 
-export function handleItemCompleted(item: Item): Promise<Item> {
-  return fetch(`${API_URL}/items/${item.id}/`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ completed: !item.completed }),
-  }).then((res) => res.json())
+export class ApiError extends Error {
+  constructor(public status: number, message:string) { super(message) }
 }
+
+async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const res = await fetch(`${API_URL}${path}`, {
+    credentials: 'include',
+    ...init,
+    headers: {
+      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
+      ...init.headers,
+    },
+  })
+  if (!res.ok) throw new ApiError(res.status, res.statusText)
+  return (res.status === 204 ? undefined : await res.json()) as T
+}
+
+export async function fetchMe(): Promise<User | null> {
+  try {
+    return await request<User>('/users/me')
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 401) return null
+    throw e
+  }
+}
+
+export async function getGoogleAuthUrl(): Promise<string> {
+  const { authorization_url } = await request<GoogleAuth>('/auth/google/authorize')
+  return authorization_url
+}
+
+export const logOut = () => request<void>('/auth/logout/', {method: 'POST'})
+
+export const fetchItems = () => request<Item[]>('/items/')
+
+export const createItem = (title: string) =>
+  request<Item>('/items/', { method: 'POST', body: JSON.stringify({ title, completed: false }) })
+
+export const handleItemCompleted = (item: Item) =>
+  request<Item>(`/items/${item.id}`, { method: 'PUT', body: JSON.stringify({ completed: !item.completed }) })
