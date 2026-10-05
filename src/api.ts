@@ -22,9 +22,12 @@ export interface GoogleAuth {
 }
 
 export class ApiError extends Error {
-  constructor(public status: number, message:string) { super(message) }
+  status: number
+  constructor(status: number, message: string) {
+    super(message)
+    this.status = status
+  }
 }
-
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
     credentials: 'include',
