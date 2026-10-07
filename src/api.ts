@@ -3,9 +3,16 @@ const API_URL = import.meta.env.VITE_API_URL
 export interface Item {
   id: number
   title: string
-  completed: boolean
   created_at: string
   updated_at: string
+  started_at: string | null
+  completed_at: string | null
+}
+
+export interface ItemUpdate {
+  title?: string
+  started_at?: string | null
+  completed?: string | null
 }
 
 export interface User {
@@ -59,8 +66,13 @@ export const logOut = () => request<void>('/auth/logout/', {method: 'POST'})
 
 export const fetchItems = () => request<Item[]>('/items/')
 
-export const createItem = (title: string) =>
-  request<Item>('/items/', { method: 'POST', body: JSON.stringify({ title, completed: false }) })
+export const getItem = (id: number) => request<Item>(`/items/${id}`)
 
-export const handleItemCompleted = (item: Item) =>
-  request<Item>(`/items/${item.id}`, { method: 'PUT', body: JSON.stringify({ completed: !item.completed }) })
+export const createItem = (title: string) =>
+  request<Item>('/items/', { method: 'POST', body: JSON.stringify({ title }) })
+
+export const updateItem = (id: number, changes: ItemUpdate) =>
+  request<Item>(`/items/${id}`, { method: 'PUT', body: JSON.stringify(changes) })
+
+export const deleteItem = (id: number) =>
+  request<void>(`/items/${id}`, { method: 'DELETE' })
