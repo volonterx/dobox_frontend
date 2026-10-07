@@ -13,7 +13,7 @@ function StartButton({ item, onStarted }: StartButtonProps) {
   async function start() {
     setPending(true)
     try {
-      onStarted(await updateItem(item.id, { started_at: new Date().toISOString() }))
+      onStarted(await updateItem(item.id, { started: true }))
     } finally {
       setPending(false)
     }

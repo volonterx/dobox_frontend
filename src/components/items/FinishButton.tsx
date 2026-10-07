@@ -13,7 +13,7 @@ function FinishButton({ item, onFinished }: FinishButtonProps) {
   async function finish() {
     setPending(true)
     try {
-      onFinished(await updateItem(item.id, { completed: new Date().toISOString() }))
+      onFinished(await updateItem(item.id, { completed: true }))
     } finally {
       setPending(false)
     }

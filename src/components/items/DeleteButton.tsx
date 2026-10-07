@@ -2,11 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { deleteItem, type Item } from '@/api'
 
-interface DeleteButtonProps {
-  item: Item
-}
-
-function DeleteButton({ item }: DeleteButtonProps) {
+function DeleteButton({ item }: {item: Item}) {
   const navigate = useNavigate()
   const [pending, setPending] = useState(false)
 

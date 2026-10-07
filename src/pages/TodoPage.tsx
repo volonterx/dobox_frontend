@@ -3,6 +3,7 @@ import {fetchItems, type Item} from '@/api'
 import {useNavigate} from 'react-router'
 import Form from '@/components/items/Form'
 import {getItemStatus} from "@/utils/itemStatus.ts";
+import Timer from "@/components/items/Timer.tsx";
 
 function TodoPage() {
   const [items, setItems] = useState<Item[]>([])
@@ -30,10 +31,11 @@ function TodoPage() {
           <ul className="list">
             {items.map((item) => (
               <li key={item.id}
-                  className={`list-row items-center cursor-pointer ${getItemStatus(item) === 'finished' ? 'line-through' : ''}`}
+                  className={`flex list-row items-center justify-between cursor-pointer ${getItemStatus(item) === 'finished' ? 'line-through' : ''}`}
                   onClick={() => navigate(`/items/${item.id}`)}
               >
-                {item.title}
+                <div>{item.title}</div>
+                <div><Timer item={item}/></div>
               </li>
             ))}
           </ul>
