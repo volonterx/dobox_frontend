@@ -7,13 +7,15 @@ export interface Item {
   updated_at: string
   started_at: string | null
   completed_at: string | null
+  parent_id?: number | null
+  parent?: Item
 }
 
 export interface ItemUpdate {
   title?: string
-  started_at?: string | null
   completed?: boolean | null
   started?: boolean | null
+  parent_id?: number
 }
 
 export interface User {
@@ -69,8 +71,8 @@ export const fetchItems = () => request<Item[]>('/items/')
 
 export const getItem = (id: number) => request<Item>(`/items/${id}`)
 
-export const createItem = (title: string) =>
-  request<Item>('/items/', { method: 'POST', body: JSON.stringify({ title }) })
+export const createItem = (changes: ItemUpdate) =>
+  request<Item>('/items/', { method: 'POST', body: JSON.stringify(changes) })
 
 export const updateItem = (id: number, changes: ItemUpdate) =>
   request<Item>(`/items/${id}`, { method: 'PUT', body: JSON.stringify(changes) })

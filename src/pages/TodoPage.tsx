@@ -1,9 +1,8 @@
 import {useEffect, useState} from 'react'
 import {fetchItems, type Item} from '@/api'
 import {useNavigate} from 'react-router'
-import Form from '@/components/items/Form'
+import { Form, Timer } from '@/components/items'
 import {getItemStatus} from "@/utils/itemStatus.ts";
-import Timer from "@/components/items/Timer.tsx";
 
 function TodoPage() {
   const [items, setItems] = useState<Item[]>([])
@@ -42,9 +41,7 @@ function TodoPage() {
         ),
       }[status]}
       <div className="fixed inset-x-0 bottom-0 bg-base-100 pt-2 pb-18">
-        <div className="mx-auto max-w-lg px-4">
-          <Form onCreated={loadItems}/>
-        </div>
+        <Form onCreated={loadItems}/>
       </div>
     </div>
   )

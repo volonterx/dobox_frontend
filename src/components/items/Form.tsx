@@ -1,8 +1,9 @@
-import { createItem } from '@/api'
+import {createItem, type Item} from '@/api'
 import { useFormStatus } from "react-dom";
 
 interface FormProps {
-  onCreated: () => void
+  onCreated: (item_id: number | null) => void
+  parent_id?: number
 }
 
 function Submit() {
@@ -10,19 +11,22 @@ function Submit() {
   return <button type="submit" className="btn btn-primary join-item" disabled={status.pending}>Add</button>
 }
 
-function Form({ onCreated }: FormProps) {
+function Form({ parent_id, onCreated }: FormProps) {
 
   async function addItem(formData: FormData) {
     const title = formData.get('title') as string
-    await createItem(title)
-    onCreated()
+    const data = {title: title, parent_id: parent_id}
+    const item = await createItem(data) as Item
+    onCreated(item?.id)
   }
 
   return (
-    <form action={addItem} className="join w-full">
-      <input name="title" type="text" placeholder="Add a new item" className="input join-item w-full" />
-      <Submit />
-    </form>
+    <div className="mx-auto max-w-lg px-4">
+      <form action={addItem} className="join w-full">
+        <input name="title" type="text" placeholder="Add a new item" className="input join-item w-full" />
+        <Submit />
+      </form>
+    </div>
   )
 }
 
