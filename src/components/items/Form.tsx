@@ -23,7 +23,7 @@ function Form({ parent_id, onCreated }: FormProps) {
   return (
     <div className="mx-auto max-w-lg px-4">
       <form action={addItem} className="join w-full">
-        <input name="title" type="text" placeholder="Add a new item" className="input join-item w-full" />
+        <input name="title" type="text" placeholder="Add a new item" autoFocus className="input join-item w-full" />
         <Submit />
       </form>
     </div>

@@ -1,7 +1,7 @@
 import { useBackTo } from '@/hooks/useBackTo'
 import {getItem, type Item} from "@/api.ts";
 import {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router";
+import {useNavigate, useParams, useSearchParams} from "react-router";
 import { getItemStatus } from '@/utils/itemStatus'
 import { StartButton, FinishButton, DeleteButton, FollowUpButton, Form, Card } from '@/components/items'
 
@@ -10,13 +10,15 @@ function ItemPage() {
 
   const { id } = useParams()
   const [item, setItem] = useState<Item>()
-  const [showForm, setShowForm] = useState(false)
+  const [params, setSearchParams] = useSearchParams()
+  const showForm = params.has('new')
+
 
   const navigate = useNavigate()
 
   function redirectToNewItem(item_id: number | null) {
     if (item_id) {
-      setShowForm(false)
+      setSearchParams('')
       navigate(`/items/${item_id}`)
     }
   }
@@ -52,7 +54,7 @@ function ItemPage() {
               <DeleteButton item={item} />
               {
                   status === 'finished' ? (
-                  <FollowUpButton item={item} onClick={() => setShowForm(true)} />
+                  <FollowUpButton item={item} onClick={() => setSearchParams({ new: '1' })} />
                 ) : (
                   <>
                     <StartButton item={item} onStarted={setItem} />

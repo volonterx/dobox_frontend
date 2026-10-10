@@ -1,5 +1,9 @@
 const API_URL = import.meta.env.VITE_API_URL
 
+export interface ItemId {
+  id: number
+}
+
 export interface Item {
   id: number
   title: string
@@ -70,6 +74,8 @@ export const logOut = () => request<void>('/auth/logout/', {method: 'POST'})
 export const fetchItems = () => request<Item[]>('/items/')
 
 export const getItem = (id: number) => request<Item>(`/items/${id}`)
+
+export const getRandomItem = () => request<ItemId>(`/items/random`)
 
 export const createItem = (changes: ItemUpdate) =>
   request<Item>('/items/', { method: 'POST', body: JSON.stringify(changes) })
