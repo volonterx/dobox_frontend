@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { updateItem, type Item } from '@/api'
 import { getItemStatus } from '@/utils/itemStatus'
+import TapeButton from '@/components/ui/TapeButton'
 
 interface StartButtonProps {
   item: Item
@@ -20,13 +21,14 @@ function StartButton({ item, onStarted }: StartButtonProps) {
   }
 
   return (
-    <button
-      className="btn tape tape-primary btn-lg flex-1"
+    <TapeButton
+      tone="primary" tape={4}
+      className="btn-lg flex-1"
       disabled={pending || getItemStatus(item) !== 'new'}
       onClick={start}
     >
       {pending ? <span className="loading loading-spinner loading-xs" /> : 'Start'}
-    </button>
+    </TapeButton>
   )
 }
 

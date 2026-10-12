@@ -1,5 +1,6 @@
 import {createItem, type Item} from '@/api'
 import { useFormStatus } from "react-dom";
+import TapeButton from '@/components/ui/TapeButton'
 
 interface FormProps {
   onCreated: (item_id: number | null) => void
@@ -8,7 +9,7 @@ interface FormProps {
 
 function Submit() {
   const status = useFormStatus()
-  return <button type="submit" className="btn tape tape-primary" disabled={status.pending}>Add</button>
+  return <TapeButton type="submit" tone="primary" tape={1} disabled={status.pending}>Add</TapeButton>
 }
 
 function Form({ parent_id, onCreated }: FormProps) {

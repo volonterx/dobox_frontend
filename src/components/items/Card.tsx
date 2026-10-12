@@ -19,7 +19,7 @@ function Card({ item, additionalClasses }: CardProps) {
   return (
     <div className={additionalClasses}>
       <StatusBadge status={status} />
-      <h2 className={`text-2xl font-semibold break-words ${status === 'finished' ? 'line-through opacity-60' : ''}`}>
+      <h2 className={`text-2xl py-2 font-semibold break-words ${status === 'finished' ? 'line-through opacity-60' : ''}`}>
         {item.title}
       </h2>
 

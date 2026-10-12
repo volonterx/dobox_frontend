@@ -13,36 +13,18 @@ body {
   background: url('/bg-app-8.png') center / cover fixed;
 }
 
-/* Adhesive-tape buttons: use together with `btn`, e.g. "btn tape tape-primary" */
+/* Adhesive-tape buttons: use together with `btn`, e.g. "btn tape tape-primary".
+   The tape shape (--tape-img) is picked by useTape() from the element's proportions. */
 .tape {
   --tape: 148 163 184;
   --tape-ink: #fff;
   --tape-tilt: -1deg;
-  --tape-cut-a: polygon(
-    0 0, 100% 0,
-    calc(100% - 3px) 5%, calc(100% - 9px) 11%, calc(100% - 2px) 17%, calc(100% - 6px) 22%, 100% 29%,
-    calc(100% - 8px) 35%, calc(100% - 4px) 41%, calc(100% - 10px) 48%, calc(100% - 3px) 54%,
-    calc(100% - 7px) 61%, calc(100% - 1px) 66%, calc(100% - 9px) 73%, calc(100% - 4px) 79%,
-    calc(100% - 8px) 85%, calc(100% - 2px) 91%, calc(100% - 6px) 96%, 100% 100%,
-    0 100%,
-    5px 95%, 1px 90%, 9px 84%, 3px 78%, 7px 72%, 0 67%, 6px 60%, 10px 55%, 2px 49%,
-    8px 43%, 3px 37%, 6px 31%, 0 26%, 9px 20%, 4px 14%, 7px 8%, 2px 3%
-  );
-  --tape-cut-b: polygon(
-    0 0, 100% 0,
-    calc(100% - 6px) 4%, calc(100% - 1px) 9%, calc(100% - 8px) 14%, calc(100% - 3px) 21%,
-    calc(100% - 10px) 27%, calc(100% - 5px) 33%, calc(100% - 2px) 40%, calc(100% - 7px) 46%,
-    calc(100% - 9px) 52%, calc(100% - 3px) 58%, calc(100% - 6px) 64%, 100% 70%,
-    calc(100% - 8px) 76%, calc(100% - 4px) 82%, calc(100% - 10px) 88%, calc(100% - 2px) 94%, 100% 100%,
-    0 100%,
-    4px 96%, 9px 91%, 2px 86%, 6px 80%, 0 74%, 8px 68%, 3px 62%, 7px 57%, 1px 51%,
-    10px 45%, 5px 38%, 2px 32%, 8px 25%, 4px 19%, 9px 12%, 3px 7%
-  );
-  --tape-cut: var(--tape-cut-a);
+  --tape-img: url("/tapes/tape-4.png");
   position: relative;
   isolation: isolate;
   background: none;
   border: 0;
+  border-radius: 0;
   box-shadow: none;
   color: var(--tape-ink);
   font-weight: 700;
@@ -52,22 +34,31 @@ body {
   filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.45));
   transition: transform 0.15s, filter 0.15s;
 }
-.tape:nth-child(even) { --tape-tilt: 0.8deg; --tape-cut: var(--tape-cut-b); }
+.tape:nth-child(even) { --tape-tilt: 0.8deg; }
 .tape:hover { transform: rotate(var(--tape-tilt)) translateY(-1px); }
 .tape:active { transform: rotate(var(--tape-tilt)) translateY(1px); filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.5)); }
 .tape:disabled, .tape[disabled] { opacity: 0.45; background: none; color: var(--tape-ink); }
 
-/* tape body: colour + sheen + grain, cut with zigzag ends */
+/* tape body: grayscale tape image multiplied with the tone colour, cut to the image's own shape */
 .tape::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.28), transparent 35%, rgb(0 0 0 / 0.12)),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
-    rgb(var(--tape));
-  clip-path: var(--tape-cut);
+  background-color: rgb(var(--tape));
+  background-image: var(--tape-img);
+  background-size: 100% 100%;
+  background-blend-mode: multiply;
+  mask-image: var(--tape-img);
+  mask-size: 100% 100%;
+}
+
+/* trims text that doesn't fit the widest tape */
+.tape-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tape-primary { --tape: 129 135 214; }
@@ -75,7 +66,15 @@ body {
 .tape-error   { --tape: 222 118 134; }
 .tape-neutral { --tape: 203 213 225; --tape-ink: #0f172a; }
 
-/* Torn paper label for text inputs: wrap the input in `.paper` */
+/* Small tape label (badges): "badge tape tape-sm tape-primary" */
+.tape-sm {
+  --tape-tilt: -2deg;
+  padding-inline: 0.8rem;
+  font-weight: 600;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.45));
+}
+
+/* Tape-shaped paper label for text inputs: wrap the input in `.paper` (shape via --tape-img) */
 .paper {
   position: relative;
   isolation: isolate;
@@ -88,16 +87,12 @@ body {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.2), transparent 40%, rgb(0 0 0 / 0.08)),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
-    rgb(240 236 224 / 0.92);
-  clip-path: polygon(
-    1% 6%, 8% 0, 17% 5%, 26% 1%, 36% 6%, 47% 0, 58% 4%, 69% 0, 79% 5%, 90% 1%, 99% 5%,
-    100% 28%, 98% 52%, 100% 76%, 99% 95%,
-    92% 100%, 82% 95%, 71% 100%, 60% 96%, 49% 100%, 38% 95%, 27% 100%, 16% 96%, 7% 100%, 0 94%,
-    1% 72%, 0 48%, 2% 24%
-  );
+  background-color: rgb(240 236 224);
+  background-image: var(--tape-img, url("/tapes/tape-6.png"));
+  background-size: 100% 100%;
+  background-blend-mode: multiply;
+  mask-image: var(--tape-img, url("/tapes/tape-6.png"));
+  mask-size: 100% 100%;
 }
 .paper-input {
   width: 100%;
@@ -110,7 +105,7 @@ body {
   font-size: 1.05rem;
 }
 .paper-input::placeholder { color: rgb(28 25 23 / 0.5); }
-.paper:focus-within::before { background-color: rgb(246 243 232 / 0.97); }
+.paper:focus-within::before { background-color: rgb(252 250 242); }
 
 /* Small tape label (badges): "badge tape tape-sm tape-primary" */
 .tape-sm {

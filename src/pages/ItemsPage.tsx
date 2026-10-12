@@ -3,6 +3,7 @@ import {fetchItems, getRandomItem, type Item, type ItemId} from '@/api'
 import {useNavigate, useSearchParams, Outlet} from 'react-router'
 import { Form, Timer } from '@/components/items'
 import {getItemStatus} from "@/utils/itemStatus.ts";
+import TapeButton from '@/components/ui/TapeButton'
 
 function ItemsPage() {
   const [items, setItems] = useState<Item[]>([])
@@ -50,8 +51,8 @@ function ItemsPage() {
     }
     return (
       <div className="mx-auto flex max-w-lg gap-2 px-4">
-        <button className="btn tape tape-neutral btn-lg flex-1" onClick={redirectToRandomItem}>Random</button>
-        <button className="btn tape tape-primary btn-lg flex-1" onClick={() => setSearchParams({ new: '1' })}>Add new</button>
+        <TapeButton tone="neutral" tape={5} className="btn-lg flex-1" onClick={redirectToRandomItem}>Random</TapeButton>
+        <TapeButton tone="primary" tape={3} className="btn-lg flex-1" onClick={() => setSearchParams({ new: '1' })}>Add new</TapeButton>
       </div>
     )
   }
