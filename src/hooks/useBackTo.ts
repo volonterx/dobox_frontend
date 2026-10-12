@@ -1,8 +1,13 @@
 import { createContext, useContext, useEffect } from 'react'
 
+export interface Back {
+  to: string
+  onBack?: () => void
+}
+
 interface BackContextValue {
-  backTo: string | null
-  setBackTo: (to: string | null) => void
+  back: Back | null
+  setBack: (back: Back | null) => void
 }
 
 export const BackContext = createContext<BackContextValue | null>(null)
@@ -13,15 +18,17 @@ function useBackContext() {
   return ctx
 }
 
-export function useBackTarget() {
-  return useBackContext().backTo
+export function useBack() {          // was useBackTarget
+  return useBackContext().back
 }
 
-export function useBackTo(to: string) {
-  const { setBackTo } = useBackContext()
+export function useBackTo(to: string, onBack?: () => void) {
+  const { setBack } = useBackContext()
 
   useEffect(() => {
-    setBackTo(to)
-    return () => setBackTo(null)
-  }, [to, setBackTo])
+    setBack({ to, onBack })
+    return () => setBack(null)
+  }, [to, onBack, setBack])
 }
+
+

@@ -8,7 +8,7 @@ interface FormProps {
 
 function Submit() {
   const status = useFormStatus()
-  return <button type="submit" className="btn btn-primary join-item" disabled={status.pending}>Add</button>
+  return <button type="submit" className="btn tape tape-primary" disabled={status.pending}>Add</button>
 }
 
 function Form({ parent_id, onCreated }: FormProps) {
@@ -22,8 +22,10 @@ function Form({ parent_id, onCreated }: FormProps) {
 
   return (
     <div className="mx-auto max-w-lg px-4">
-      <form action={addItem} className="join w-full">
-        <input name="title" type="text" placeholder="Add a new item" autoFocus className="input join-item w-full" />
+      <form action={addItem} className="flex items-center gap-3">
+        <label className="paper flex-1">
+          <input name="title" type="text" placeholder="Add a new item" autoFocus className="paper-input" />
+        </label>
         <Submit />
       </form>
     </div>

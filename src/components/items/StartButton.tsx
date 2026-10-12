@@ -21,7 +21,7 @@ function StartButton({ item, onStarted }: StartButtonProps) {
 
   return (
     <button
-      className="btn btn-primary btn-lg flex-1"
+      className="btn tape tape-primary btn-lg flex-1"
       disabled={pending || getItemStatus(item) !== 'new'}
       onClick={start}
     >

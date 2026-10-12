@@ -18,7 +18,7 @@ function DeleteButton({ item }: {item: Item}) {
   }
 
   return (
-    <button className="btn btn-error btn-outline btn-lg flex-1" disabled={pending} onClick={remove}>
+    <button className="btn tape tape-error btn-lg flex-1" disabled={pending} onClick={remove}>
       {pending ? <span className="loading loading-spinner loading-xs" /> : 'Delete'}
     </button>
   )

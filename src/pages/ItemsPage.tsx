@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {fetchItems, getRandomItem, type Item, type ItemId} from '@/api'
-import {useNavigate, useSearchParams} from 'react-router'
+import {useNavigate, useSearchParams, Outlet} from 'react-router'
 import { Form, Timer } from '@/components/items'
 import {getItemStatus} from "@/utils/itemStatus.ts";
 
@@ -19,7 +19,7 @@ function ItemsPage() {
 
   async function redirectToRandomItem() {
     const randomItem = await getRandomItem() as ItemId
-    navigate(`/items/${randomItem.id}`)
+    navigate(`/items/${randomItem.id}?scan=true`)
   }
 
 
@@ -50,8 +50,8 @@ function ItemsPage() {
     }
     return (
       <div className="mx-auto flex max-w-lg gap-2 px-4">
-        <button className="btn btn-lg flex-1" onClick={redirectToRandomItem}>Random</button>
-        <button className="btn btn-primary btn-lg flex-1" onClick={() => setSearchParams({ new: '1' })}>Add new</button>
+        <button className="btn tape tape-neutral btn-lg flex-1" onClick={redirectToRandomItem}>Random</button>
+        <button className="btn tape tape-primary btn-lg flex-1" onClick={() => setSearchParams({ new: '1' })}>Add new</button>
       </div>
     )
   }
@@ -59,7 +59,8 @@ function ItemsPage() {
   return (
     <div className="pb-36">
       {renderList()}
-      <div className="fixed inset-x-0 bottom-0 bg-base-100 pt-2 pb-18">
+      <Outlet />
+      <div className="fixed inset-x-0 bottom-0 bg-transparent pt-10 pb-10 z-1">
         {renderFooter()}
       </div>
     </div>

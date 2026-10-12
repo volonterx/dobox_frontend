@@ -9,8 +9,9 @@ export default function AppRoutes() {
       <Route element={<AppLayout />}>
       <Route path="/login" element={<LoginPage/>}/>
         <Route element={<RequireAuth />}>
-          <Route path="/" element={<TodoPage/>}/>
-          <Route path="/items/:id" element={<ItemPage/>}/>
+          <Route path="/" element={<TodoPage/>}>
+            <Route path="/items/:id" element={<ItemPage/>}/>
+          </Route>
         </Route>
       </Route>
     </Routes>
