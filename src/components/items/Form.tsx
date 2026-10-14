@@ -18,6 +18,7 @@ function Form({ parent_id, onCreated }: FormProps) {
     const title = formData.get('title') as string
     const data = {title: title, parent_id: parent_id}
     const item = await createItem(data) as Item
+    document.querySelector('.scroll-under-header')?.scrollTo({ top: 0, behavior: "smooth" })
     onCreated(item?.id)
   }
 

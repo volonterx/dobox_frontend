@@ -18,6 +18,8 @@ body {
 /* Darkest colour the paper may reach (the sprocket holes). Derived from the theme's base colour: a mid gray
    on light themes, and still almost black on dark ones. Raise the 0.5 for lighter holes, lower it for darker. */
 :root {
+  /* Android's gesture bar, which the installed app draws under (viewport-fit=cover in index.html); 0 in a browser tab */
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
   /* Multiplied over the scan so its paper matches the paper of the photocopier-ui demo background
      (average #eaeae5; the scan itself averages #f7f7fa, so the factor is demo / scan per channel). */
   --paper-tint: #f2f2ea;
@@ -206,4 +208,13 @@ body:has(.paper-sheet:not([hidden]))::after {
 .scroll-under-header {
   padding-top: 4.5rem;
   mask-image: linear-gradient(to bottom, transparent 3.5rem, #000 4.5rem);
+}
+
+/* Fixed button bar at the bottom of a page, clear of the gesture bar */
+.bottom-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  padding-top: 2.5rem;
+  padding-bottom: calc(2.5rem + var(--safe-bottom));
 }

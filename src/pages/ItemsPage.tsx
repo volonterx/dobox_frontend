@@ -67,7 +67,7 @@ function ItemsPage() {
     <div className="pb-36">
       {renderList()}
       <Outlet />
-      <div className="fixed inset-x-0 bottom-0 bg-transparent pt-10 pb-10 z-1">
+      <div className="bottom-bar z-1">
         {renderFooter()}
       </div>
     </div>

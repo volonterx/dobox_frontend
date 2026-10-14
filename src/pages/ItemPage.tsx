@@ -101,7 +101,7 @@ function ItemPage() {
             ) : ("")
         }
 
-        <div className="fixed inset-x-0 bottom-0 bg-transparent pt-10 pb-10">
+        <div className="bottom-bar">
           {
             showForm ? (
               <Form parent_id={item.id} onCreated={(item_id: number | null) => redirectToNewItem(item_id)} />
