@@ -5,6 +5,17 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>dobox_frontend</title>
+    <script>
+      (() => { // prefer-color-scheme tweak
+        const dark = matchMedia('(prefers-color-scheme: dark)')
+        let leaving = false
+        const apply = () => { if (!leaving) document.documentElement.dataset.theme = dark.matches ? 'dark' : 'light' }
+        apply()
+        dark.addEventListener('change', apply)
+        addEventListener('beforeunload', () => { leaving = true })
+        addEventListener('pageshow', () => { leaving = false; apply() })
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

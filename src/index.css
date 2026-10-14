@@ -2,7 +2,10 @@
 @import "@fontsource/ibm-plex-mono/500.css";
 @import "@fontsource/ibm-plex-mono/700.css";
 @import "tailwindcss";
-@plugin "daisyui";
+/* No --prefersdark: index.html sets data-theme from the system setting */
+@plugin "daisyui" {
+  themes: light --default, dark;
+}
 
 @theme {
   --font-sans: "IBM Plex Mono", ui-monospace, monospace;
@@ -10,7 +13,77 @@
 
 body {
   font-family: var(--font-sans);
-  background: url('/bg-app-8.png') center / cover fixed;
+}
+
+/* Darkest colour the paper may reach (the sprocket holes). Derived from the theme's base colour: a mid gray
+   on light themes, and still almost black on dark ones. Raise the 0.5 for lighter holes, lower it for darker. */
+:root {
+  /* Multiplied over the scan so its paper matches the paper of the photocopier-ui demo background
+     (average #eaeae5; the scan itself averages #f7f7fa, so the factor is demo / scan per channel). */
+  --paper-tint: #f2f2ea;
+  /* What shows around the tilted paper: pure white on light themes, pure black on dark ones. */
+  --paper-outside: oklch(from var(--color-base-100) round(l, 1) 0 0);
+  --paper-hole: oklch(from var(--color-base-100) calc(l * l * l * 0.5) 0 h);
+}
+
+/* Tractor-feed paper, tilted by a random angle chosen on each load (--paper-tilt, set in main.tsx).
+   Multiplying the white scan by the theme's base colour keeps it as is in light themes and darkens it
+   (holes stay black) in dark ones. The layer is larger than the screen so the tilt never shows its edge; only the
+   paper's right edge comes into view, in a corner. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -6vmax;
+  z-index: -1;
+  pointer-events: none;
+  transform: rotate(var(--paper-tilt, 0deg));
+  background-color: var(--paper-outside);
+  /* top to bottom: hole floor, tint, the scan, then the theme colour under the scan only (not around it) */
+  background-image: linear-gradient(var(--paper-hole), var(--paper-hole)), linear-gradient(var(--paper-tint), var(--paper-tint)),
+    url('/tractor-feed-page.jpg'), linear-gradient(var(--color-base-100), var(--color-base-100));
+  background-repeat: no-repeat, no-repeat, repeat-y, no-repeat;
+  /* twice the screen width, pinned right: only the right sprocket strip shows, and its holes are 2x bigger.
+     The 6vmax offset matches the layer's overhang. */
+  background-size: 200vw auto;
+  /* One position per layer: Chrome repeats a single "right 6vmax top" as "left 6vmax" for the other layers. */
+  background-position: right 6vmax top, right 6vmax top, right 6vmax top, right 6vmax top;
+  background-blend-mode: lighten, multiply, multiply, normal;
+}
+
+/* The scanner glass outside the paper: the strip of the layer above right of the paper's edge, which the tilt
+   brings into a corner. It sits above the photocopy overlay so it stays pure white (or black) instead of toned.
+   Same box and rotation as body::before so the two line up. Hidden while the item sheet is open over the page. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -6vmax;
+  z-index: 2147483647;
+  pointer-events: none;
+  transform: rotate(var(--paper-tilt, 0deg));
+  background: linear-gradient(to left, var(--paper-outside) 6vmax, transparent 6vmax);
+}
+body:has(.paper-sheet:not([hidden]))::after {
+  display: none;
+}
+
+/* Paper for the item sheet: the left sprocket strip, 30% bigger than on the main page and tilted a bit more
+   (--sheet-tilt, set in main.tsx). The sheet itself does not scroll, so the paper stays put behind its
+   scrolling content. The scan cover gets the same layer, so the blank sheet that slides up matches. */
+.paper-sheet::before,
+.paper-sheet .pcui-cover::before {
+  content: "";
+  position: absolute;
+  inset: -6vmax;
+  pointer-events: none;
+  transform: rotate(var(--sheet-tilt, 0deg));
+  background-color: var(--paper-outside);
+  /* top to bottom: hole floor, tint, the scan, then the theme colour under the scan only (not around it) */
+  background-image: linear-gradient(var(--paper-hole), var(--paper-hole)), linear-gradient(var(--paper-tint), var(--paper-tint)),
+    url('/tractor-feed-page.jpg'), linear-gradient(var(--color-base-100), var(--color-base-100));
+  background-repeat: no-repeat, no-repeat, repeat-y, no-repeat;
+  background-size: 230vw auto;
+  background-position: left 6vmax top, left 6vmax top, left 6vmax top, left 6vmax top;
+  background-blend-mode: lighten, multiply, multiply, normal;
 }
 
 /* Adhesive-tape buttons: use together with `btn`, e.g. "btn tape tape-primary".

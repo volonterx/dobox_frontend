@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {fetchItems, getRandomItem, type Item, type ItemId} from '@/api'
-import {useNavigate, useSearchParams, Outlet} from 'react-router'
+import {useNavigate, useSearchParams, Outlet, useLocation} from 'react-router'
 import { Form, Timer } from '@/components/items'
 import {getItemStatus} from "@/utils/itemStatus.ts";
 import TapeButton from '@/components/ui/TapeButton'
@@ -11,12 +11,18 @@ function ItemsPage() {
   const navigate = useNavigate()
   const [params, setSearchParams] = useSearchParams()
   const showForm = params.has('new')
+  const { pathname } = useLocation()
+  const onList = pathname === '/'
 
   function loadItems() {
     return fetchItems()
       .then(setItems)
       .finally(() => setloading(false))
   }
+
+  useEffect(() => {
+    if (onList || loading) loadItems()
+  }, [onList])
 
   async function redirectToRandomItem() {
     const randomItem = await getRandomItem() as ItemId

@@ -1,6 +1,6 @@
 import { useBackTo } from '@/hooks/useBackTo'
 import {getItem, type Item} from "@/api.ts";
-import {useEffect, useState, useRef, useCallback} from "react";
+import {useEffect, useState, useRef} from "react";
 import {useBlocker, useLocation, useNavigate, useParams, useSearchParams} from "react-router";
 import { getItemStatus } from '@/utils/itemStatus'
 import { StartButton, FinishButton, DeleteButton, FollowUpButton, Form, Card } from '@/components/items'
@@ -13,25 +13,19 @@ function ItemPage() {
   const navigate = useNavigate()
   const navigateBack = useNavigateBack('/')
   const sheetRef = useRef<HTMLDivElement>(null)
-  const closing = useRef(false)
+  const leaving = useRef(false)
 
-  const close = useCallback(async () => {
-    if (closing.current) return
-    closing.current = true
-    const el = sheetRef.current
-    if (el) await sheets.dismiss(el)
-    navigateBack()
-  }, [navigateBack])
+  useBackTo('/', navigateBack)
 
-  useBackTo('/', close)
-
-  const blocker = useBlocker(
-    ({ nextLocation }) => !closing.current && !nextLocation.pathname.startsWith('/items/'),
-  )
+  const blocker = useBlocker(({ nextLocation }) => !nextLocation.pathname.startsWith('/items/'))
 
   useEffect(() => {
     if (blocker.state !== 'blocked') return
-    closing.current = true
+    if (leaving.current) {
+      blocker.reset()
+      return
+    }
+    leaving.current = true
     const el = sheetRef.current
     const done = el ? sheets.dismiss(el) : Promise.resolve()
     done.then(() => blocker.proceed())
@@ -93,7 +87,8 @@ function ItemPage() {
 
   return (
 
-    <div ref={sheetRef} hidden className="top-16 fixed inset-0 overflow-auto bg-[url('/bg-app.jpg')] bg-cover bg-center z-10">
+    <div ref={sheetRef} hidden className="paper-sheet top-16 fixed inset-0 overflow-hidden bg-base-100 z-10">
+      <div className="relative z-[1] h-full overflow-auto">
       <div className="flex flex-col items-center gap-3 pt-8 pb-36 text-center">
         <Card item={item}/>
 
@@ -127,6 +122,7 @@ function ItemPage() {
             )
           }
         </div>
+      </div>
       </div>
 
     </div>
