@@ -21,7 +21,7 @@ function FinishButton({ item, onFinished }: FinishButtonProps) {
   }
 
   return (
-    <TapeButton tone="success" tape={2} className="btn-lg flex-1" disabled={pending || getItemStatus(item) === 'finished'} onClick={finish}>
+    <TapeButton tone="success" tape={2} className="btn-lg flex-[2]" disabled={pending || getItemStatus(item) === 'finished'} onClick={finish}>
       {pending ? <span className="loading loading-spinner loading-xs" /> : 'Finish'}
     </TapeButton>
   )

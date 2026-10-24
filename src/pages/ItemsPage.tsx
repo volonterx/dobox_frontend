@@ -10,9 +10,9 @@ function ItemsPage() {
   const [loading, setloading] = useState(true)
   const navigate = useNavigate()
   const [params, setSearchParams] = useSearchParams()
-  const showForm = params.has('new')
   const { pathname } = useLocation()
   const onList = pathname === '/'
+  const showForm = onList && params.has('new')
 
   function loadItems() {
     return fetchItems()

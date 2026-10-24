@@ -111,11 +111,10 @@ function ItemPage() {
                 {
                     status === 'finished' ? (
                     <FollowUpButton item={item} onClick={() => setSearchParams({ new: '1' })} />
+                  ) : status === 'new' ? (
+                    <StartButton item={item} onStarted={setItem} />
                   ) : (
-                    <>
-                      <StartButton item={item} onStarted={setItem} />
-                      <FinishButton item={item} onFinished={setItem} />
-                    </>
+                    <FinishButton item={item} onFinished={setItem} />
                   )
                 }
               </div>

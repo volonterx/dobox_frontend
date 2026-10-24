@@ -1,4 +1,5 @@
 import {createItem, type Item} from '@/api'
+import { useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import TapeButton from '@/components/ui/TapeButton'
 
@@ -13,6 +14,8 @@ function Submit() {
 }
 
 function Form({ parent_id, onCreated }: FormProps) {
+  const input = useRef<HTMLInputElement>(null)
+  useEffect(() => input.current?.focus(), [])
 
   async function addItem(formData: FormData) {
     const title = formData.get('title') as string
@@ -26,7 +29,7 @@ function Form({ parent_id, onCreated }: FormProps) {
     <div className="mx-auto max-w-lg px-4">
       <form action={addItem} className="flex items-center gap-3">
         <label className="paper flex-1">
-          <input name="title" type="text" placeholder="Add a new item" autoFocus className="paper-input" />
+          <input name="title" type="text" ref={input} placeholder="Add a new item" className="paper-input" />
         </label>
         <Submit />
       </form>

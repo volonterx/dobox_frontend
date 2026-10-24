@@ -23,7 +23,7 @@ function StartButton({ item, onStarted }: StartButtonProps) {
   return (
     <TapeButton
       tone="primary" tape={4}
-      className="btn-lg flex-1"
+      className="btn-lg flex-[2]"
       disabled={pending || getItemStatus(item) !== 'new'}
       onClick={start}
     >
