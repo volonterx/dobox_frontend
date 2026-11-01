@@ -3,7 +3,7 @@ import {getItem, type Item} from "@/api.ts";
 import {useEffect, useState, useRef} from "react";
 import {useBlocker, useLocation, useNavigate, useParams, useSearchParams} from "react-router";
 import { getItemStatus } from '@/utils/itemStatus'
-import { StartButton, FinishButton, DeleteButton, FollowUpButton, Form, Card } from '@/components/items'
+import { StartButton, FinishButton, ICantButton, ResetButton, FollowUpButton, Form, Card } from '@/components/items'
 import { Sheets } from 'photocopier-ui'
 import { useNavigateBack } from '@/hooks/useNavigateBack'
 
@@ -90,7 +90,7 @@ function ItemPage() {
     <div ref={sheetRef} hidden className="paper-sheet top-16 fixed inset-0 overflow-hidden bg-base-100 z-10">
       <div className="relative z-[1] h-full overflow-auto">
       <div className="flex flex-col items-center gap-3 pt-8 pb-36 text-center">
-        <Card item={item}/>
+        <Card item={item} editable={true}/>
 
         {
           item.parent ? (
@@ -107,7 +107,7 @@ function ItemPage() {
               <Form parent_id={item.id} onCreated={(item_id: number | null) => redirectToNewItem(item_id)} />
             ) : (
               <div className="mx-auto flex max-w-lg gap-2 px-4">
-                <DeleteButton item={item} />
+                {status === 'new' ? <ICantButton /> : <ResetButton item={item} onReset={setItem} />}
                 {
                     status === 'finished' ? (
                     <FollowUpButton item={item} onClick={() => setSearchParams({ new: '1' })} />

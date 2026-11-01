@@ -17,6 +17,8 @@ export interface Item {
 
 export interface ItemUpdate {
   title?: string
+  started_at?: string | null
+  completed_at?: string | null
   completed?: boolean | null
   started?: boolean | null
   parent_id?: number

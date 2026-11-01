@@ -218,3 +218,19 @@ body:has(.paper-sheet:not([hidden]))::after {
   padding-top: 2.5rem;
   padding-bottom: calc(2.5rem + var(--safe-bottom));
 }
+
+.editable_area {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  outline: none;
+  resize: none;
+  padding: 0;
+  max-width: 100%;
+  text-align: inherit;
+  vertical-align: middle;
+  field-sizing: content;
+  overflow-wrap: anywhere;
+  overflow: hidden;
+}

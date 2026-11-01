@@ -1,6 +1,7 @@
 import {useAuth} from "@/auth/useAuth";
 import {useBack} from "@/hooks/useBackTo";
 import {useNavigate} from "react-router";
+import BackIcon from "@/components/icons/BackIcon";
 
 
 
@@ -20,11 +21,7 @@ function Header() {
               className="btn btn-ghost btn-circle mr-1"
               onClick={() => (back.onBack ? back.onBack() : navigate(back.to))}
             >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-5">
-              <path d="M19 12H5" />
-              <path d="m12 19-7-7 7-7" />
-            </svg>
+            <BackIcon />
           </button>
         )}
         <h1 className="text-xl font-bold cursor-pointer"
