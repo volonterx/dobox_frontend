@@ -3,7 +3,7 @@ import {getItem, type Item} from "@/api.ts";
 import {useEffect, useState, useRef} from "react";
 import {useBlocker, useLocation, useNavigate, useParams, useSearchParams} from "react-router";
 import { getItemStatus } from '@/utils/itemStatus'
-import { StartButton, FinishButton, ICantButton, ResetButton, FollowUpButton, Form, Card } from '@/components/items'
+import { StartButton, FinishButton, ICantButton, ResetButton, FollowUpButton, Form, Card, CloseButton } from '@/components/items'
 import { Sheets } from 'photocopier-ui'
 import { useNavigateBack } from '@/hooks/useNavigateBack'
 
@@ -107,7 +107,7 @@ function ItemPage() {
               <Form parent_id={item.id} onCreated={(item_id: number | null) => redirectToNewItem(item_id)} />
             ) : (
               <div className="mx-auto flex max-w-lg gap-2 px-4">
-                {status === 'new' ? <ICantButton /> : <ResetButton item={item} onReset={setItem} />}
+                {status === 'new' ? <ICantButton /> : status === 'finished' ? <CloseButton /> : <ResetButton item={item} onReset={setItem} />}
                 {
                     status === 'finished' ? (
                     <FollowUpButton item={item} onClick={() => setSearchParams({ new: '1' })} />
