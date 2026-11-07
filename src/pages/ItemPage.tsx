@@ -107,10 +107,14 @@ function ItemPage() {
               <Form parent_id={item.id} onCreated={(item_id: number | null) => redirectToNewItem(item_id)} />
             ) : (
               <div className="mx-auto flex max-w-lg gap-2 px-4">
-                {status === 'new' ? <ICantButton /> : status === 'finished' ? <CloseButton /> : <ResetButton item={item} onReset={setItem} />}
+                {status === 'new' ? <ICantButton /> : status === 'finished' ? (
+                    <FollowUpButton item={item} onClick={() => setSearchParams({ new: '1' })} />
+                  ) : (
+                    <ResetButton item={item} onReset={setItem} />
+                  )}
                 {
                     status === 'finished' ? (
-                    <FollowUpButton item={item} onClick={() => setSearchParams({ new: '1' })} />
+                    <CloseButton />
                   ) : status === 'new' ? (
                     <StartButton item={item} onStarted={setItem} />
                   ) : (
