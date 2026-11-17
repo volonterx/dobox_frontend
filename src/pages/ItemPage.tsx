@@ -90,13 +90,13 @@ function ItemPage() {
     <div ref={sheetRef} hidden className="paper-sheet top-16 fixed inset-0 overflow-hidden bg-base-100 z-10">
       <div className="relative z-[1] h-full overflow-auto">
       <div className="flex flex-col items-center gap-3 pt-8 pb-36 text-center">
-        <Card item={item} editable={true}/>
+        <Card key={item.id} item={item} editable={true}/>
 
         {
           item.parent ? (
             <>
               <span className="text-3xl opacity-60">↑</span>
-              <Card item={item.parent} additionalClasses={"opacity-60"}/>
+              <Card key={item.parent.id} item={item.parent} additionalClasses={"opacity-60"}/>
             </>
             ) : ("")
         }

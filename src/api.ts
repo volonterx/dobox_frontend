@@ -53,7 +53,13 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
       ...init.headers,
     },
   })
-  if (!res.ok) throw new ApiError(res.status, res.statusText)
+  if (!res.ok) {
+    const detail = (await res.json().catch(() => null))?.detail
+    const message = typeof detail === 'string' ? detail
+      : Array.isArray(detail) ? detail.map((e: { msg: string }) => e.msg).join('. ')
+      : res.statusText || 'Something went wrong'
+    throw new ApiError(res.status, message)
+  }
   return (res.status === 204 ? undefined : await res.json()) as T
 }
 

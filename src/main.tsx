@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import { Overlay } from 'photocopier-ui'
+import { showError } from '@/errors'
 
 const tilt = (min: number, max: number) => (Math.random() < 0.5 ? -1 : 1) * (min + Math.random() * (max - min)) + 'deg'
 document.documentElement.style.setProperty('--paper-tilt', tilt(0.6, 1.8))
@@ -13,6 +14,8 @@ const pageTheme = () => (document.documentElement.dataset.theme === 'dark' ? 'da
 const overlay = Overlay.mount(document.body, { fixed: true, level: 0.3, theme: pageTheme() })
 new MutationObserver(() => overlay.update({ theme: pageTheme() }))
   .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+
+window.addEventListener('unhandledrejection', e => showError(e.reason))
 
 const router = createBrowserRouter([{ path: '*', element: <App /> }])
 
